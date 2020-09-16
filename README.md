@@ -3,9 +3,9 @@ Gallicapresse révèle la structure des données exploitées pour l'analyse de n
 
 Les affichages effectués grâce à cet outil révèlent la structure des données selon :
   
-  Les titres de presse les plus représentés
+  -Les titres de presse les plus représentés
   
-  L'origine géographique des mentions (ville de publication de ces titres de presse)
+  -L'origine géographique des mentions (ville de publication de ces titres de presse)
 
 Cet outil affiche des analyses en termes absolus et relatifs.
 
