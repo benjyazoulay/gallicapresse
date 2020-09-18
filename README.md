@@ -10,6 +10,7 @@ Les affichages effectués grâce à cet outil révèlent la structure des donné
 Cet outil affiche des analyses en termes absolus et relatifs.
 
 Deux résolutions d'affichage sont disponibles : à l'année et au mois
-
-![Histogramme Abel Bonnard2](https://user-images.githubusercontent.com/25954316/93107812-60fc9900-f6b2-11ea-9e2d-dae3ea8cb1dd.png)
-![Histogramme journaux](https://user-images.githubusercontent.com/25954316/93107816-622dc600-f6b2-11ea-935c-d0561d061af2.png)
+![Histogramme](https://user-images.githubusercontent.com/25954316/93577616-8c2a0580-f99c-11ea-9ebb-85ff353b0c20.png)
+![Histogramme_100](https://user-images.githubusercontent.com/25954316/93577621-8df3c900-f99c-11ea-9a7b-da2f6a91d3d9.png)
+![Histogramme_lieux](https://user-images.githubusercontent.com/25954316/93577627-8f24f600-f99c-11ea-95d6-ccc36a98bf86.png)
+![Histogramme_lieux_100](https://user-images.githubusercontent.com/25954316/93577630-8fbd8c80-f99c-11ea-8704-07f88fd420b0.png)
