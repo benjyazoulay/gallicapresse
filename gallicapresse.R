@@ -1,5 +1,6 @@
 library(stringr)
 library(rvest)
+library(tidyverse)
 library(ggplot2)
 library(ggrepel)
 library(dplyr)
@@ -18,13 +19,110 @@ library(lubridate)
 #Cet outil affiche des analyses en termes absolus et relatifs.
 #Deux résolutions d'affichage sont disponibles : à l'année et au mois
 
-#####INITITALISATION
-#téléchargez le rapport de votre recherche au format .csv depuis Gallica
-#nommez le rapport et rangez le dans votre répertoire de travail
-setwd("C:/Users/Benjamin/Downloads/presse") #inscrivez ici votre répertoire de travail
+#####EXTRACTION D'UN RAPPORT DE RECHERCHE
+#La fonction d'extraction de rapport de recherche depuis gallica fonctionnant mal, nous reprenons ici une partie de l'outil gargallica qui exécute parfaitement cette tâche
 
-rapport<-read.csv("rapport.csv", sep = ";", encoding = "UTF-8") #Lecture du rapport de recherche
-rapport<-cbind(rapport[,1],rapport[,3],rapport[,6],rapport[,7]) #Extraction des colonnes contenant les critères d'intérêt
+setwd("C:/Users/Benjamin/Downloads/presse") #inscrivez ici votre répertoire de travail
+#####GARGALLICA###############
+i = 1
+
+# Indiquez la question (la requête CQL visible dans l'URL query = () )
+# Il faut recopier la question posée sur gallica.bnf.fr
+
+question <- '(%20text%20all%20"bonnard"%20%20prox/unit=word/distance=1%20"abel"))%20and%20(dc.type%20all%20"fascicule")%20sortby%20dc.date/sort.ascending&suggest=10&keywords='
+
+page <- function(i)xml2::read_xml(paste0('http://gallica.bnf.fr/SRU?operation=searchRetrieve&version=1.2&query=(', question,')&collapsing=false&maximumRecords=50&startRecord=', i))
+
+
+# Première 50 réponses (initialiser la structure xml avec un premier coup)
+tot <- page(1)
+# récupérer le nombre total de réponses
+te <- xml2::as_list(tot)
+nmax <- as.integer(unlist(te$searchRetrieveResponse$numberOfRecords))
+# nmax <- 7853
+
+# Boucle sur la suite, 50 par 50
+# Ajouter au document xml tot les réponses des autres pages
+for (j in seq(51, nmax, by = 50)){
+  temp <- page(j)
+  for (l in xml2::xml_children(temp)){
+    xml2::xml_add_child(tot, l)
+  }
+}
+
+xml2::write_xml(tot, 'data/jacques_bonhomme_gallica.xml')
+
+# zip(zipfile = 'data/jacques_bonhomme_gallica.xml.zip',
+#     files = 'data/jacques_bonhomme_gallica.xml')
+
+
+xml_to_df <- function(doc, ns = xml_ns(doc)) {
+  library(xml2)
+  library(purrr)
+  split_by <- function(.x, .f, ...) {
+    vals <- map(.x, .f, ...)
+    split(.x, simplify_all(transpose(vals)))
+  }
+  node_to_df <- function(node) {
+    # Filter the attributes for ones that aren't namespaces
+    # x <- list(.index = 0, .name = xml_name(node, ns))
+    x <- list(.name = xml_name(node, ns))
+    # Attributes as column headers, and their values in the first row
+    attrs <- xml_attrs(node)
+    if (length(attrs) > 0) {attrs <- attrs[!grepl("xmlns", names(attrs))]}
+    if (length(attrs) > 0) {x <- c(x, attrs)}
+    # Build data frame manually, to avoid as.data.frame's good intentions
+    children <- xml_children(node)
+    if (length(children) >= 1) {
+      x <- 
+        children %>%
+        # Recurse here
+        map(node_to_df) %>%
+        split_by(".name") %>%
+        map(bind_rows) %>%
+        map(list) %>%
+        {c(x, .)}
+      attr(x, "row.names") <- 1L
+      class(x) <- c("tbl_df", "data.frame")
+    } else {
+      x$.value <- xml_text(node)
+    }
+    x
+  }
+  node_to_df(doc)
+}
+
+# u <- xml_to_df(xml2::xml_find_all(tot, ".//srw:records"))
+x = 1:3
+parse_gallica <- function(x){
+  xml2::xml_find_all(tot, ".//srw:recordData")[x] %>% 
+    xml_to_df() %>% 
+    select(-.name) %>% 
+    .$`oai_dc:dc` %>% 
+    .[[1]] %>% 
+    mutate(recordId = 1:nrow(.)) %>% 
+    #    tidyr::unnest() %>% 
+    tidyr::gather(var, val, - recordId) %>% 
+    group_by(recordId, var) %>% 
+    mutate(value = purrr::map(val, '.value') %>% purrr::flatten_chr() %>% paste0( collapse = " -- ")) %>% 
+    select(recordId, var, value) %>% 
+    ungroup() %>% 
+    mutate(var = stringr::str_remove(var, 'dc:')) %>% 
+    tidyr::spread(var, value) %>% 
+    select(-.name)
+}
+
+tot <- xml2::read_xml('data/jacques_bonhomme_gallica.xml')
+
+tot_df <- 1:nmax %>% 
+  parse_gallica %>% 
+  bind_rows()
+
+write.csv(tot_df,"rapport.csv")
+##############################
+#rapport<-read.csv("rapport.csv") #Lecture du rapport de recherche
+rapport<-tot_df
+rapport<-cbind(rapport$identifier,rapport$title,rapport$publisher,rapport$date) #Extraction des colonnes contenant les critères d'intérêt
 colnames(rapport)<-c("lien","titre","lieu","date")
 rapport<-as.data.frame(rapport)
 rapport<-rapport[str_count(rapport$date,"-")==2,] #On ne conserve que les numéros présentant une date au format (AAAA/MM/JJ)
@@ -111,7 +209,7 @@ ggplot(rapport,aes(date,color=principaux_titres,fill=principaux_titres))+
   theme(legend.position="top")+
   scale_color_brewer(type = 'seq', palette = "Paired")+
   scale_fill_brewer(type = 'seq', palette = "Paired")+
-  ggsave("Histogramme.png",scale=2)
+  ggsave("Histogramme.png",scale=2.5)
 
 
       #Sur le graphe suivant : 
