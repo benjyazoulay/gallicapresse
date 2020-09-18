@@ -9,6 +9,8 @@ Les affichages effectués grâce à cet outil révèlent la structure des donné
 
 Cet outil affiche des analyses en termes absolus et relatifs.
 
+Merci à Guillaume Pressiat pour son précieux outil d'extraction du rapport de recherche, Gargallica, pour partie intégré à ce programme. https://github.com/GuillaumePressiat/gargallica
+
 Deux résolutions d'affichage sont disponibles : à l'année et au mois
 ![Histogramme](https://user-images.githubusercontent.com/25954316/93577616-8c2a0580-f99c-11ea-9ebb-85ff353b0c20.png)
 ![Histogramme_100](https://user-images.githubusercontent.com/25954316/93577621-8df3c900-f99c-11ea-9a7b-da2f6a91d3d9.png)
