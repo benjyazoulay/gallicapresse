@@ -291,7 +291,7 @@ ggplot(rapport, aes(date,color=principaux_titres)) +
   theme(axis.text.x = element_text(angle=45))+
   ggsave("Courbe_1940-1945.png",scale=2)
 
-#####STRUCTURE DES DONNEES SELON LE JOURNAL
+#####STRUCTURE DES DONNEES SELON LA VILLE DE PUBLICATION
   #Résolution annuelle
 
       #Sur le graphe suivant : 
@@ -395,7 +395,8 @@ ggplot(rapport, aes(date,color=principaux_lieux)) +
 
 
 
-#####AFFICHAGE DU GRAPHIQUE REVELANT L'ORIGINE DE LA NOTORIETE DU PERSONNAGE ETUDIE (STRUCTURE DE LA BASE DE DONNEES)
+#####STRUCTURE DE LA BASE DE DONNEES : HISTOGRAMME HORIZONTAL ATEMPOREL
+  #####JOURNAUX D'ORIGINE DES MENTIONS
 top_titres2<-top_n(presse,50)
 autres<-sum(presse$count)-sum(top_titres2$count)
 top_titres2<-as.data.frame(rbind(top_titres2,c("Autres titres",autres)))
@@ -408,7 +409,7 @@ top_titres2%>%mutate() %>%ggplot(aes(count,reorder(titre,count)))+
   ggtitle("Titres de la presse française mentionnant le plus Abel Bonnard (1883-1968)")+
   ggsave("Histogramme_journaux.png",scale=2)
 
-#####AFFICHAGE DU GRAPHIQUE REVELANT L'ORIGINE GEOGRAPHIQUE DE LA NOTORIETE DU PERSONNAGE ETUDIE (STRUCTURE DE LA BASE DE DONNEES)
+  #####ORIGINE GEOGRAPHIQUE DES MENTIONS
 top_lieux2<-top_n(presse_l,20)
 autres<-sum(presse_l$count)-sum(top_lieux$count)
 top_lieux2<-as.data.frame(rbind(top_lieux2,c("Autres villes",autres)))
