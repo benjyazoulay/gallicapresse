@@ -126,7 +126,9 @@ rapport$date<-as.numeric(str_remove_all(rapport$date,"-")) #On transforme la dat
 rapport$lieu<-str_extract(rapport$lieu,"([:alnum:]+[:alnum:])") #Nettoyage du nom de la première ville de publication
 
 #Nettoyage des titres de presse et restriction du titre à 30 caractères
+rapport$titre<-str_replace_all(rapport$titre,"[:punct:]"," ")
 rapport$titre<-str_remove_all(rapport$titre,"  ")
+rapport$titre<-str_remove_all(rapport$titre,"\t")
 rapport$titre<-str_remove_all(rapport$titre,"\n")
 rapport$titre<-str_remove_all(rapport$titre,"\\[")
 rapport$titre<-str_remove_all(rapport$titre,"\\{")
