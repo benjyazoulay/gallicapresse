@@ -50,11 +50,7 @@ for (j in seq(51, nmax, by = 50)){
   }
 }
 
-xml2::write_xml(tot, 'data/jacques_bonhomme_gallica.xml')
-
-# zip(zipfile = 'data/jacques_bonhomme_gallica.xml.zip',
-#     files = 'data/jacques_bonhomme_gallica.xml')
-
+xml2::write_xml(tot, 'results.xml')
 
 xml_to_df <- function(doc, ns = xml_ns(doc)) {
   library(xml2)
@@ -112,7 +108,7 @@ parse_gallica <- function(x){
     select(-.name)
 }
 
-tot <- xml2::read_xml('data/jacques_bonhomme_gallica.xml')
+tot <- xml2::read_xml('results.xml')
 
 tot_df <- 1:nmax %>% 
   parse_gallica %>% 
