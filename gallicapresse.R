@@ -129,6 +129,7 @@ rapport$lieu<-str_extract(rapport$lieu,"([:alnum:]+[:alnum:])") #Nettoyage du no
 rapport$titre<-str_remove_all(rapport$titre,"  ")
 rapport$titre<-str_remove_all(rapport$titre,"\n")
 rapport$titre<-str_remove_all(rapport$titre,"\\[")
+rapport$titre<-str_remove_all(rapport$titre,"\\{")
 rapport$titre[nchar(rapport$titre)>30]<-str_extract(rapport$titre[nchar(rapport$titre)>30],"..............................") 
 
 #####CHOIX DE LA PERIODE D'ETUDE : RENTREZ ICI LES BORNES CHRONOLOGIQUES SOUHAITEES (YYYYMMDD)
@@ -406,7 +407,7 @@ top_titres2%>%mutate() %>%ggplot(aes(count,reorder(titre,count)))+
   geom_col()+
   #theme(axis.text.x = element_text(angle=90))+
   xlab("Nombre de numéros mentionnant Abel Bonnard") + ylab("Journal")+
-  ggtitle("Titres de la presse française mentionnant le plus Abel Bonnard (1883-1968)")+
+  ggtitle("Titres de la presse française mentionnant le plus Abel Bonnard \n(1883-1968)")+
   ggsave("Histogramme_journaux.png",scale=2)
 
   #####ORIGINE GEOGRAPHIQUE DES MENTIONS
@@ -419,7 +420,7 @@ top_lieux2%>%mutate() %>%ggplot(aes(count,reorder(lieu,count)))+
   geom_col()+
   #theme(axis.text.x = element_text(angle=90))+
   xlab("Nombre de numéros mentionnant Abel Bonnard") + ylab("Journal")+
-  ggtitle("Villes d'édition des numéros de presse mentionnant Abel Bonnard (1883-1968)")+
+  ggtitle("Villes d'édition des numéros de presse mentionnant Abel Bonnard \n(1883-1968)")+
   ggsave("Histogramme_villes.png",scale=2)
 
 #####PREPARATION DE LA COURBE D'EVOLUTION DE LA NOTORIETE DU PERSONNAGE ETUDIE
