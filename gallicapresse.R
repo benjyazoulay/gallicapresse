@@ -1,16 +1,13 @@
 library(stringr)
-library(rvest)
-library(tidyverse)
-library(ggplot2)
-library(ggrepel)
 library(dplyr)
-library(tm)
-library(stm)
-library(wordcloud)
-library(ggwordcloud)
-library(tidytext)
-library(plyr)
+library(ggplot2)
 library(lubridate)
+library(purrr)
+library(stats)
+library(utils)
+library(xml2)
+library(tidyverse)
+
 #####GALLICAPRESSE
 #Gallicapresse révèle la structure des données utilisées dans l'analyse de notoriété réalisée par GALLICAGRAM
 #Les affichages effectués grâce à cet outil révèlent la structure des données selon :
